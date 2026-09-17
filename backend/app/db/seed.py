@@ -37,17 +37,22 @@ def get_upcoming_weekday(target_weekday: int, hour: int, minute: int = 0) -> dat
     target_date = now + timedelta(days=days_ahead)
     return target_date.replace(hour=hour, minute=minute, second=0, microsecond=0)
 
-def seed_data():
+def seed_data(reset: bool = False):
     """Seed deterministic demo data."""
+    if reset:
+        print("Dropping existing tables and rebuilding schema...")
+        Base.metadata.drop_all(bind=engine)
+
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
 
     try:
         # Check if already seeded
-        existing_hospital = db.query(Hospital).filter(Hospital.name == "CityCare Hospital").first()
-        if existing_hospital:
-            print("Database already seeded. Skipping...")
-            return
+        if not reset:
+            existing_hospital = db.query(Hospital).filter(Hospital.name == "CityCare Hospital").first()
+            if existing_hospital:
+                print("Database already seeded. Skipping...")
+                return
 
         print("Seeding CareFlow AI demo data...")
 
@@ -475,4 +480,6 @@ def seed_data():
         db.close()
 
 if __name__ == "__main__":
-    seed_data()
+    import sys
+    should_reset = "--reset" in sys.argv
+    seed_data(reset=should_reset)

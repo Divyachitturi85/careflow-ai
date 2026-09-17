@@ -8,7 +8,7 @@ class Appointment(BaseModel):
     hospital_id = Column(String(36), ForeignKey("hospitals.id", ondelete="CASCADE"), nullable=False, index=True)
     patient_id = Column(String(36), ForeignKey("patients.id", ondelete="CASCADE"), nullable=False, index=True)
     doctor_id = Column(String(36), ForeignKey("doctors.id", ondelete="CASCADE"), nullable=False, index=True)
-    slot_id = Column(String(36), ForeignKey("availability_slots.id", ondelete="RESTRICT"), unique=True, nullable=False, index=True)
+    slot_id = Column(String(36), ForeignKey("availability_slots.id", ondelete="RESTRICT"), nullable=False, index=True)
 
     status = Column(
         String(50), 
