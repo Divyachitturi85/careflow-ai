@@ -52,6 +52,7 @@ class AvailabilitySlot(BaseModel):
     is_blocked = Column(Boolean, default=False, nullable=False, index=True)
 
     # Relationships
+    hospital = relationship("Hospital")
     doctor = relationship("Doctor", back_populates="availability_slots")
     calendar = relationship("Calendar", back_populates="slots")
     appointment = relationship("Appointment", back_populates="slot", uselist=False)

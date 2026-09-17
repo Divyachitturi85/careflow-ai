@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from app.config import settings
-from app.api import auth
+from app.api import auth, hospitals, doctors, availability
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -22,6 +22,9 @@ app.add_middleware(
 
 # Include Routers
 app.include_router(auth.router)
+app.include_router(hospitals.router)
+app.include_router(doctors.router)
+app.include_router(availability.router)
 
 @app.get("/health", tags=["System"])
 def health_check():

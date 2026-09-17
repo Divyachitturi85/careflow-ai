@@ -1,3 +1,3 @@
-from app.api import auth
+from app.api import auth, hospitals, doctors, availability
 
-__all__ = ["auth"]
+__all__ = ["auth", "hospitals", "doctors", "availability"]
