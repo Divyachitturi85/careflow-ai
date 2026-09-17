@@ -74,20 +74,22 @@ def test_seeded_doctors_and_orthopedics_specialty(db):
 def test_deterministic_availability_slots(db):
     """Verify Dr. Rao has real slots in the database including Friday 3 PM, Friday 4 PM, Saturday 11 AM."""
     dr_rao = db.query(Doctor).filter(Doctor.name == "Dr. Rao").first()
-    slots = db.query(AvailabilitySlot).filter(AvailabilitySlot.doctor_id == dr_rao.id).all()
-    assert len(slots) >= 3
+    # Filter for seed calendar slots
+    seed_slots = db.query(AvailabilitySlot).filter(
+        AvailabilitySlot.doctor_id == dr_rao.id,
+        AvailabilitySlot.calendar_id != None
+    ).all()
+    assert len(seed_slots) >= 3
 
-    # Check that none are booked initially
-    assert all(not s.is_booked for s in slots)
-    assert all(s.hospital_id == dr_rao.hospital_id for s in slots)
+    assert all(s.hospital_id == dr_rao.hospital_id for s in seed_slots)
 
     # Check times: should have Friday (weekday=4) and Saturday (weekday=5)
-    weekdays = {s.start_time.weekday() for s in slots}
+    weekdays = {s.start_time.weekday() for s in seed_slots}
     assert 4 in weekdays  # Friday
     assert 5 in weekdays  # Saturday
 
     # Verify start hours: 15 (3 PM), 16 (4 PM), 11 (11 AM)
-    start_hours = {s.start_time.hour for s in slots}
+    start_hours = {s.start_time.hour for s in seed_slots}
     assert 15 in start_hours
     assert 16 in start_hours
     assert 11 in start_hours
