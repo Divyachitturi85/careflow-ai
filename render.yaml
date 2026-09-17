@@ -1,0 +1,51 @@
+version: "1"
+
+databases:
+  - name: careflow-db
+    databaseName: careflow
+    user: careflow_user
+    plan: free
+
+services:
+  # Backend Web Service
+  - type: web
+    name: careflow-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m app.db.seed && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        fromDatabase:
+          name: careflow-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: APP_ENV
+        value: production
+      - key: DEBUG
+        value: "False"
+      - key: AI_PROVIDER
+        value: smart_agent
+      - key: MOCK_EHR_DEFAULT_MODE
+        value: NORMAL
+      - key: CORS_ORIGINS
+        value: "https://careflow-frontend.onrender.com,http://localhost:5173,http://localhost:3000"
+
+  # Frontend Static Site
+  - type: static
+    name: careflow-frontend
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://careflow-backend.onrender.com/api
