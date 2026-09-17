@@ -11,6 +11,7 @@ __pycache__/
 *$py.class
 venv/
 .venv/
+backend/venv/
 env/
 *.sqlite3
 *.db
