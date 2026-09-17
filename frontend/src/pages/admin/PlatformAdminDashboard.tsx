@@ -29,8 +29,8 @@ export const PlatformAdminDashboard: React.FC = () => {
         api.getReconciliations(),
       ]);
       setCurrentMode(modeRes.mode);
-      setOperations(opsRes.operations);
-      setReconciliations(recRes.records);
+      setOperations(opsRes);
+      setReconciliations(recRes);
     } catch (err) {
       console.error('Failed to load admin data:', err);
     } finally {

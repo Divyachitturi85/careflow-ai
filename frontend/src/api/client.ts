@@ -166,9 +166,9 @@ export const api = {
 
   getSimulationMode: (): Promise<{ mode: string }> => request('/admin/simulation-mode'),
 
-  getOperations: (limit: number = 20): Promise<{ count: number; operations: IntegrationOperation[] }> =>
-    request(`/admin/operations?limit=${limit}`),
+  getOperations: (limit: number = 20): Promise<IntegrationOperation[]> =>
+    request<IntegrationOperation[]>(`/admin/operations`),
 
-  getReconciliations: (): Promise<{ count: number; records: ReconciliationRecord[] }> =>
-    request('/admin/reconciliations'),
+  getReconciliations: (): Promise<ReconciliationRecord[]> =>
+    request<ReconciliationRecord[]>('/admin/reconciliations'),
 };

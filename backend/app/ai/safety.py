@@ -4,7 +4,8 @@ from typing import Tuple, Optional
 # Patterns for clinical diagnoses, prescribing, and treatment recommendations
 CLINICAL_PATTERNS = [
     r"\b(diagnose|diagnosis|what disease|what condition|what is wrong with me)\b",
-    r"\bdo i have (a|an|the|cancer|diabetes|flu|covid|infection|depression|adhd|pneumonia|strep|arthritis|fever|cough|pain|disease|condition|illness)\b",
+    r"\bdo i have\b.*?\b(disease|condition|cancer|heart|stroke|diabetes|flu|covid|infection|depression|asthma|hypertension|pneumonia|strep|arthritis|fracture|sprain|disorder|illness|syndrome|attack)\b",
+    r"\b(could i have|am i having|am i suffering from)\b.*?\b(disease|cancer|heart|attack|stroke|infection)\b",
     r"\b(what medicine|what medication|prescribe|prescription|which pill|what drug|dosage)\b",
     r"\b(change my medication|stop taking|increase dose|decrease dose|side effects of)\b",
     r"\b(how to treat|cure for|medical advice|remedy for|treat my)\b",

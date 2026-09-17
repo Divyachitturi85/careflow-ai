@@ -77,7 +77,7 @@ class AppointmentService:
 
         # 2. Idempotency Check
         correlation_id = request.correlation_id or f"CORR-{uuid.uuid4().hex[:12].upper()}"
-        idempotency_key = request.idempotency_key or f"IDEMP-{patient.id[:8]}-{request.slot_id[:8]}"
+        idempotency_key = request.idempotency_key or f"IDEMP-{patient.id[:8]}-{request.slot_id[:8]}-{uuid.uuid4().hex[:6]}"
 
         existing_appt = (
             db.query(Appointment)
@@ -92,6 +92,9 @@ class AppointmentService:
                 return AppointmentService._recover_and_verify(
                     db, existing_appt, correlation_id
                 )
+            else:
+                # If existing appointment failed or was cancelled, allow fresh attempt with new key
+                idempotency_key = f"{idempotency_key}-RETRY-{uuid.uuid4().hex[:6]}"
 
         # 3. Atomic Slot Revalidation & Reservation
         slot = SchedulingService.revalidate_and_reserve_slot(db, request.slot_id)
