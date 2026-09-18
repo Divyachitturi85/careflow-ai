@@ -39,7 +39,6 @@ services:
   - type: web
     name: careflow-frontend
     runtime: static
-    plan: free
     rootDir: frontend
     buildCommand: npm install && VITE_API_BASE_URL="${BACKEND_URL}/api" npm run build
     staticPublishPath: dist
